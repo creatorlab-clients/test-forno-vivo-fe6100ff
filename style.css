@@ -1,0 +1,1014 @@
+/* ==========================================================
+   Forno Vivo — template-ristoranti-004
+   Settore: ristoranti (multi-page premium, pizzaria gourmet)
+   Design system: §4 Food & Beverage — variante editoriale-premium
+   Scroll animation: food-rustic (sfondo bianco)
+   Lingua: pt-BR
+   ========================================================== */
+
+/* ----------------------------------------------------------
+   @property — 7 colori brand con fallback
+   ---------------------------------------------------------- */
+@property --brand-primary { syntax: '<color>'; inherits: true; initial-value: #2A1810; }
+@property --brand-accent  { syntax: '<color>'; inherits: true; initial-value: #B8451F; }
+@property --brand-ink     { syntax: '<color>'; inherits: true; initial-value: #1A1410; }
+@property --brand-bg      { syntax: '<color>'; inherits: true; initial-value: #F5EFE4; }
+@property --brand-surface { syntax: '<color>'; inherits: true; initial-value: #FFFFFF; }
+@property --brand-muted   { syntax: '<color>'; inherits: true; initial-value: #8A7766; }
+@property --brand-footer  { syntax: '<color>'; inherits: true; initial-value: #1A1410; }
+
+/* ----------------------------------------------------------
+   :root — doppio fallback + placeholder pipeline (§4.1)
+   ---------------------------------------------------------- */
+:root {
+  --brand-primary: #2A1810;
+  --brand-accent:  #B8451F;
+  --brand-ink:     #1A1410;
+  --brand-bg:      #F5EFE4;
+  --brand-surface: #FFFFFF;
+  --brand-muted:   #8A7766;
+  --brand-footer:  #1A1410;
+}
+:root {
+  --brand-primary: #2A1810;
+  --brand-accent:  #B8451F;
+  --brand-ink:     #1A1410;
+  --brand-bg:      #F5EFE4;
+  --brand-surface: #FFFFFF;
+  --brand-muted:   #8A7766;
+  --brand-footer:  #1A1410;
+}
+
+:root {
+  --scroll-bg: #FFFFFF;
+  --white: #FFFFFF;
+
+  /* Tipografia */
+  --serif: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+  --sans:  'Source Sans 3', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Animazione */
+  --anim-duration: 0.8s;
+  --anim-easing: cubic-bezier(.22, 1, .36, 1);
+  --anim-translateY: 56px;
+  --anim-stagger: 130ms;
+
+  /* Spacing */
+  --section-py-tight: clamp(40px, 5vh, 64px);
+  --section-py-base:  clamp(64px, 8vh, 112px);
+  --section-py-large: clamp(80px, 12vh, 144px);
+
+  /* Layout */
+  --container-max: 1200px;
+  --pad-x: 24px;
+
+  /* Radius */
+  --r-sm: 12px;
+  --r-md: 20px;
+  --r-lg: 28px;
+  --r-pill: 999px;
+}
+
+/* ----------------------------------------------------------
+   Reset e base
+   ---------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--brand-ink);
+  background: var(--brand-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+img, svg { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; padding: 0; margin: 0; }
+h1, h2, h3, h4 {
+  font-family: var(--serif);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0;
+  color: var(--brand-ink);
+}
+
+/* ----------------------------------------------------------
+   Layout helpers
+   ---------------------------------------------------------- */
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-left: var(--pad-x);
+  padding-right: var(--pad-x);
+}
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-accent);
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: clamp(36px, 5vw, 48px);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.section-lede {
+  font-size: 18px;
+  color: var(--brand-muted);
+  max-width: 640px;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.section-header .section-lede { margin: 0 auto; }
+
+/* ----------------------------------------------------------
+   CTA — fill slide
+   ---------------------------------------------------------- */
+.cta-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 14px 30px;
+  border-radius: var(--r-pill);
+  background: var(--brand-accent);
+  color: var(--white);
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  border: 2px solid var(--brand-accent);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s var(--anim-easing);
+  z-index: 0;
+}
+.cta-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--brand-primary);
+  transform: translateX(-101%);
+  transition: transform 0.4s var(--anim-easing);
+  z-index: -1;
+}
+.cta-primary:hover::before { transform: translateX(0); }
+.cta-primary:focus-visible {
+  outline: 3px solid var(--brand-accent);
+  outline-offset: 3px;
+}
+.cta-primary--light {
+  background: var(--brand-bg);
+  border-color: var(--brand-bg);
+  color: var(--brand-ink);
+}
+.cta-primary--light::before { background: var(--brand-primary); }
+.cta-primary--light:hover { color: var(--white); }
+.cta-primary--compact {
+  min-height: 40px;
+  padding: 10px 22px;
+  font-size: 13px;
+}
+
+.cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--brand-ink);
+  padding-bottom: 4px;
+  position: relative;
+}
+.cta-secondary::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 2px;
+  background: var(--brand-accent);
+  transform-origin: left;
+  transform: scaleX(1);
+  transition: transform 0.4s var(--anim-easing);
+}
+.cta-secondary:hover::after { transform: scaleX(0); transform-origin: right; }
+
+.cta-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-weight: 600;
+  color: var(--brand-accent);
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+}
+
+/* ----------------------------------------------------------
+   NAVBAR
+   ---------------------------------------------------------- */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(245, 239, 228, 0.92);
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  border-bottom: 1px solid rgba(42, 24, 16, 0.06);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 72px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.brand { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-name {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--brand-ink);
+}
+.brand-tag {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-muted);
+  margin-top: 4px;
+}
+.nav-links { display: none; gap: 28px; }
+.nav-links a {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--brand-ink);
+  transition: color 0.2s ease;
+}
+.nav-links a:hover { color: var(--brand-accent); }
+
+/* ----------------------------------------------------------
+   HERO
+   ---------------------------------------------------------- */
+.hero {
+  padding-top: 56px;
+  padding-bottom: var(--section-py-base);
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.hero-text { order: 1; }
+.hero-image { order: 0; margin: 0; }
+.hero-title {
+  font-size: clamp(40px, 8vw, 72px);
+  margin-bottom: 20px;
+  font-style: italic;
+}
+.hero-sub {
+  font-size: 19px;
+  color: var(--brand-muted);
+  margin: 0 0 32px;
+  max-width: 520px;
+}
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 32px;
+}
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 28px;
+  font-size: 14px;
+  color: var(--brand-muted);
+  font-weight: 600;
+}
+.hero-badges li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.badge-icon {
+  color: var(--brand-accent);
+  flex-shrink: 0;
+}
+.hero-image img {
+  width: 100%;
+  border-radius: var(--r-lg);
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  box-shadow: 0 30px 80px -30px rgba(42, 24, 16, 0.25);
+}
+
+/* ----------------------------------------------------------
+   MANIFESTO / ABOUT
+   ---------------------------------------------------------- */
+.manifesto {
+  padding: var(--section-py-base) 0;
+  background: var(--brand-surface);
+}
+.manifesto-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.manifesto-image { margin: 0; }
+.manifesto-image img {
+  width: 100%;
+  border-radius: var(--r-lg);
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+.manifesto-body {
+  font-size: 18px;
+  line-height: 1.7;
+  margin: 0 0 24px;
+}
+.manifesto-signature {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--brand-accent);
+  border-top: 1px solid rgba(42, 24, 16, 0.12);
+  padding-top: 16px;
+}
+
+/* ----------------------------------------------------------
+   SCROLL ANIMATION (food-rustic, sfondo bianco)
+   ---------------------------------------------------------- */
+.scroll-animation {
+  position: relative;
+  height: 300vh;
+  background: var(--scroll-bg);
+}
+.scroll-anim-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+#scroll-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* ----------------------------------------------------------
+   FORNO (il differenziatore)
+   ---------------------------------------------------------- */
+.forno-section {
+  padding: var(--section-py-base) 0;
+}
+.forno-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.forno-image { margin: 0; }
+.forno-image img {
+  width: 100%;
+  border-radius: var(--r-lg);
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+.forno-body {
+  font-size: 18px;
+  line-height: 1.7;
+  margin: 0 0 24px;
+}
+
+/* ----------------------------------------------------------
+   DOP INGREDIENTS
+   ---------------------------------------------------------- */
+.dop {
+  padding: var(--section-py-base) 0;
+  background: var(--brand-surface);
+}
+.dop-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+.dop-card {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  background: var(--brand-bg);
+  border-radius: var(--r-md);
+  padding: 24px;
+}
+.dop-card-image {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.dop-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dop-card-name {
+  font-size: 18px;
+  font-style: italic;
+  margin-bottom: 4px;
+}
+.dop-card-origin {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-accent);
+  margin-bottom: 8px;
+}
+.dop-card-desc {
+  font-size: 15px;
+  color: var(--brand-muted);
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* ----------------------------------------------------------
+   MENU HIGHLIGHTS
+   ---------------------------------------------------------- */
+.menu-hl {
+  padding: var(--section-py-base) 0;
+}
+.menu-hl-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+.menu-hl-card {
+  background: var(--brand-surface);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: 0 4px 24px -8px rgba(42, 24, 16, 0.10);
+}
+.menu-hl-card-image {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+.menu-hl-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--anim-easing);
+}
+.menu-hl-card:hover .menu-hl-card-image img { transform: scale(1.04); }
+.menu-hl-card-body { padding: 24px; }
+.menu-hl-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.menu-hl-card-title {
+  font-size: 20px;
+  font-style: italic;
+}
+.menu-hl-card-price {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--brand-accent);
+  white-space: nowrap;
+}
+.menu-hl-card-desc {
+  font-size: 15px;
+  color: var(--brand-muted);
+  margin: 0 0 12px;
+  line-height: 1.55;
+}
+.dop-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-accent);
+  background: rgba(184, 69, 31, 0.08);
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+}
+.menu-hl-foot {
+  text-align: center;
+  margin-top: 48px;
+}
+
+/* ----------------------------------------------------------
+   AMBIENTE
+   ---------------------------------------------------------- */
+.ambiente {
+  padding: var(--section-py-base) 0;
+  background: var(--brand-surface);
+}
+.ambiente-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.ambiente-tile {
+  margin: 0;
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.ambiente-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 3 / 2;
+}
+
+/* ----------------------------------------------------------
+   INFO — orari, indirizzo, mappa
+   ---------------------------------------------------------- */
+.info {
+  padding: var(--section-py-tight) 0;
+}
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+.info-block {
+  background: var(--brand-surface);
+  border-radius: var(--r-lg);
+  padding: 32px 28px;
+  border: 1px solid rgba(42, 24, 16, 0.06);
+}
+.info-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-sm);
+  background: rgba(184, 69, 31, 0.08);
+  color: var(--brand-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.info-title {
+  font-size: 20px;
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.hours-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px dashed rgba(42, 24, 16, 0.10);
+  font-size: 15px;
+}
+.hours-list li:last-child { border-bottom: none; }
+.hours-day { font-weight: 600; }
+.hours-time { color: var(--brand-muted); }
+.info-address {
+  font-style: normal;
+  font-size: 16px;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+}
+.address-street { font-weight: 600; }
+.address-city { color: var(--brand-muted); }
+.info-line { margin: 8px 0; font-size: 16px; }
+.info-link {
+  color: var(--brand-ink);
+  border-bottom: 1px solid rgba(42, 24, 16, 0.15);
+  padding-bottom: 1px;
+  transition: color 0.2s ease;
+}
+.info-link:hover { color: var(--brand-accent); }
+.map-embed {
+  margin-top: 24px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.map-embed iframe {
+  width: 100%;
+  height: 280px;
+  border: 0;
+}
+
+/* ----------------------------------------------------------
+   CTA BAND
+   ---------------------------------------------------------- */
+.cta-band {
+  padding: var(--section-py-large) 0;
+  background: var(--brand-primary);
+  color: var(--white);
+  text-align: center;
+}
+.cta-band-title {
+  color: var(--white);
+  font-size: clamp(32px, 5vw, 52px);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.cta-band-sub {
+  color: rgba(255, 255, 255, 0.80);
+  font-size: 18px;
+  max-width: 540px;
+  margin: 0 auto 32px;
+}
+
+/* ----------------------------------------------------------
+   FOOTER
+   ---------------------------------------------------------- */
+.footer {
+  background: var(--brand-footer);
+  color: rgba(245, 239, 228, 0.78);
+  padding: var(--section-py-tight) 0 24px;
+}
+.footer a { color: inherit; }
+.footer a:hover { color: var(--brand-accent); }
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+.footer-brand-name {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-style: italic;
+  font-size: 28px;
+  color: rgba(245, 239, 228, 0.95);
+}
+.footer-tag {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  margin-top: 8px;
+}
+.footer-title {
+  color: rgba(245, 239, 228, 0.95);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.footer-col p { margin: 6px 0; font-size: 14px; }
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(245, 239, 228, 0.12);
+  font-size: 12px;
+  color: rgba(245, 239, 228, 0.5);
+}
+
+/* ----------------------------------------------------------
+   MENU PAGE
+   ---------------------------------------------------------- */
+.page-hero {
+  padding: 40px 0 var(--section-py-tight);
+  text-align: center;
+}
+.page-hero .section-title { margin-bottom: 8px; }
+.page-hero-sub {
+  font-size: 17px;
+  color: var(--brand-muted);
+  margin: 0;
+}
+
+.menu-cat-nav {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 16px 0;
+  margin-bottom: 48px;
+  border-bottom: 1px solid rgba(42, 24, 16, 0.08);
+}
+.menu-cat-nav a {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--brand-muted);
+  padding: 8px 16px;
+  border-radius: var(--r-pill);
+  transition: color 0.2s, background 0.2s;
+}
+.menu-cat-nav a:hover {
+  color: var(--brand-accent);
+  background: rgba(184, 69, 31, 0.06);
+}
+
+.menu-category {
+  padding-bottom: var(--section-py-base);
+}
+.menu-category-title {
+  font-size: clamp(24px, 4vw, 36px);
+  font-style: italic;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(42, 24, 16, 0.08);
+}
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(42, 24, 16, 0.06);
+}
+.menu-item:last-child { border-bottom: none; }
+.menu-item-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+.menu-item-desc {
+  font-size: 14px;
+  color: var(--brand-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+.menu-item-price {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--brand-accent);
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------
+   FORNO PAGE
+   ---------------------------------------------------------- */
+.forno-hero {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.forno-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.forno-hero-overlay {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 48px var(--pad-x) 56px;
+  background: linear-gradient(to top, rgba(26, 20, 16, 0.80) 0%, transparent 100%);
+}
+.forno-hero-title {
+  font-size: clamp(36px, 7vw, 64px);
+  font-style: italic;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.forno-hero-sub {
+  font-size: 17px;
+  color: rgba(245, 239, 228, 0.80);
+}
+
+.forno-story {
+  padding: var(--section-py-base) 0;
+}
+.forno-story-body {
+  font-size: 18px;
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.forno-process {
+  padding: var(--section-py-base) 0;
+  background: var(--brand-surface);
+}
+.process-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.process-step {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.process-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-sm);
+  background: rgba(184, 69, 31, 0.08);
+  color: var(--brand-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.process-step-title {
+  font-size: 18px;
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.process-step-desc {
+  font-size: 15px;
+  color: var(--brand-muted);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.forno-farine {
+  padding: var(--section-py-base) 0;
+}
+
+.forno-pizzaiolo {
+  padding: var(--section-py-base) 0;
+  background: var(--brand-surface);
+}
+.pizzaiolo-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.pizzaiolo-image { margin: 0; }
+.pizzaiolo-image img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: var(--r-lg);
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+/* ==========================================================
+   ANIMAZIONI — Fade Up + Stagger Cards
+   ========================================================== */
+.fade-up {
+  opacity: 0;
+  transform: translateY(var(--anim-translateY));
+  transition: opacity var(--anim-duration) var(--anim-easing),
+              transform var(--anim-duration) var(--anim-easing);
+  will-change: transform, opacity;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-up-delay-1 { transition-delay: calc(var(--anim-stagger) * 1); }
+.fade-up-delay-2 { transition-delay: calc(var(--anim-stagger) * 2); }
+.fade-up-delay-3 { transition-delay: calc(var(--anim-stagger) * 3); }
+.fade-up-delay-4 { transition-delay: calc(var(--anim-stagger) * 4); }
+
+.stagger-card {
+  opacity: 0;
+  transform: translateY(40px) scale(0.97);
+  transition: opacity 0.6s var(--anim-easing),
+              transform 0.6s var(--anim-easing);
+  will-change: transform, opacity;
+}
+.stagger-card.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Parallax container */
+.parallax-wrap {
+  overflow: hidden;
+}
+.parallax-img {
+  will-change: transform;
+}
+
+/* ==========================================================
+   IMAGE FALLBACK
+   ========================================================== */
+.img-fallback {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--brand-primary) 8%, var(--brand-bg)),
+    color-mix(in srgb, var(--brand-accent) 6%, var(--brand-bg)));
+}
+.img-svg-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  color: var(--brand-muted);
+}
+
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+@media (min-width: 768px) {
+  :root { --pad-x: 40px; }
+
+  .nav-links { display: flex; }
+
+  .hero-grid {
+    grid-template-columns: 1.05fr 1fr;
+    gap: 56px;
+  }
+  .hero-text { order: 0; }
+  .hero-image { order: 1; }
+
+  .manifesto-grid {
+    grid-template-columns: 1fr 1.2fr;
+    gap: 64px;
+  }
+
+  .forno-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+
+  .dop-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .menu-hl-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+
+  .ambiente-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .info-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .pizzaiolo-grid {
+    grid-template-columns: auto 1fr;
+    gap: 56px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .menu-hl-grid { grid-template-columns: repeat(3, 1fr); }
+  .dop-grid { grid-template-columns: repeat(4, 1fr); }
+  .ambiente-grid { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+@media (max-width: 767px) {
+  :root { --anim-translateY: 28px; }
+  .scroll-animation { height: 200vh; }
+}
+
+/* ==========================================================
+   ACCESSIBILITA — prefers-reduced-motion
+   ========================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .fade-up, .stagger-card { opacity: 1; transform: none; }
+}
